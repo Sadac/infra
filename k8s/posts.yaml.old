@@ -1,0 +1,22 @@
+# This file has been keep as a reference for study
+apiVersion: v1
+
+# The type of object we want to create
+kind: Pod
+
+# Config options for the object we're creating
+metadata:
+  name: posts
+
+# The exact attributes we want to apply to the object we're creating
+spec:
+
+  # we can create many containers in a single pod
+  containers:
+    # a dash (-) indicates an array's element (respect the identation)
+    - name: posts
+      # The exact image we want to use
+      # If you don't specify the image version, latest will be taken by default
+      # as: image: roccosada/posts:0.0.1:latest
+      image: roccosada/posts:0.0.1
+

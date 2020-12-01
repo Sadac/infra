@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+spec:
+  replicas: 1 # the number of pods we want to create running an image
+  # find the pods with the label app: posts. [app: posts doesn't have a special meaning]
+  # it could be anything
+  selector:
+    matchLabels:
+      app: posts
+  template: # We specify the exact configuration
+    metadata: # metadata works the same way selector does. Just to tell to the Deploy what pods should manage
+      labels:
+        app: posts
+    spec:
+      containers:
+        - name: posts
+          image: roccosada/posts:latest
