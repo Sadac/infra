@@ -12,7 +12,7 @@ spec:
   template: # We specify the exact configuration
     metadata: # metadata works the same way selector does. Just to tell to the Deploy what pods should manage
       labels:
-        app: posts
+        app: posts # imagine as an html tag that will be selected in js by this label
     spec:
       containers:
         - name: posts

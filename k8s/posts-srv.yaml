@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-srv
+spec:
+  type: NodePort # creating a Node Port Service
+  selector:
+    # try to find all the pods with a label of app: posts and expose those to outisde the cluster
+    app: posts # the same as labels on posts-depl.yaml.
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000 # Node Service Port (Remember architecture, a Node wraps a Pod, a Pod wraps a Container)
+      targetPort: 4000 # actually node app container listening on port 4000 (Pod port)
+      # this happens because a Node can have multiple Pods, so we need to reach the Node and the Pod
