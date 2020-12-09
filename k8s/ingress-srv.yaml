@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations: # What's going to help the ingress controller understand we're feeding some routing rules
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules: # routing rules we want to apply
+      # since a cluster can have multiple apps within domains, we're configuring a posts.com one
+      # we can configure more if we want. But we need to setup the hosts file to point posts.com into localhost
+      # this will map http://localhost:31306, so we can hit GET posts.com/posts to get the posts
+      # ingress-ngnix will take the request and route to the appropiate Service (posts) and the service
+      # is going to hit the right Pod
+    - host: posts.com
+      http:
+        paths:
+          - path: /posts
+            backend:
+              serviceName: posts-clusterip-srv # The name of the Post Service in post-depl.yaml
+              servicePort: 4000 # The port of the Post Service for posts in post-depl.yaml
+
+
+# If in some point this doesn't work, apply this config instead
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: ingress-srv
+#   annotations:
+#     kubernetes.io/ingress.class: "nginx"
+# spec:
+#   rules:
+#     - host: posts.com
+#       http:
+#         paths:
+#           - path: /posts
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: posts-clusterip-srv
+#                 port:
+#                   number: 4000

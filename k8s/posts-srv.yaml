@@ -11,5 +11,5 @@ spec:
     - name: posts
       protocol: TCP
       port: 4000 # Node Service Port (Remember architecture, a Node wraps a Pod, a Pod wraps a Container)
-      targetPort: 4000 # actually node app container listening on port 4000 (Pod port)
+      targetPort: 4000 # actually app container listening on port 4000 (Pod port)
       # this happens because a Node can have multiple Pods, so we need to reach the Node and the Pod

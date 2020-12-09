@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderation-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderation
+  template:
+    metadata:
+      labels:
+        app: moderation
+    spec:
+      containers:
+        - name: moderation
+          image: roccosada/moderation:latest
+---
+# Create the cluster Service.
+# We can create a separate service or leave it just here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: moderation-srv
+spec:
+  selector: # tell the service what pods it is going to allow access to
+    app: moderation
+  type: ClusterIP # this is the default cluster kubernetes create for us. We can write it here or not
+  ports:
+    - name: moderation
+      protocol: TCP
+      port: 4003 # Node Service Port
+      targetPort: 4003 # App running container
+

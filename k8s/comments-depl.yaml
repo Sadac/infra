@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comments
+  template:
+    metadata:
+      labels:
+        app: comments
+    spec:
+      containers:
+        - name: comments
+          image: roccosada/comments:latest
+---
+# Create the cluster Service.
+# We can create a separate service or leave it just here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: comments-srv
+spec:
+  selector: # tell the service what pods it is going to allow access to
+    app: comments
+  type: ClusterIP # this is the default cluster kubernetes create for us. We can write it here or not
+  ports:
+    - name: comments
+      protocol: TCP
+      port: 4001 # Node Service Port
+      targetPort: 4001 # App running container
+

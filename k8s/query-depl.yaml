@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: query
+  template:
+    metadata:
+      labels:
+        app: query
+    spec:
+      containers:
+        - name: query
+          image: roccosada/query:latest
+---
+# Create the cluster Service.
+# We can create a separate service or leave it just here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: query-srv
+spec:
+  selector: # tell the service what pods it is going to allow access to
+    app: query
+  type: ClusterIP # this is the default cluster kubernetes create for us. We can write it here or not
+  ports:
+    - name: query
+      protocol: TCP
+      port: 4002 # Node Service Port
+      targetPort: 4002 # App running container
+

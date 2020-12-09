@@ -17,3 +17,19 @@ spec:
       containers:
         - name: posts
           image: roccosada/posts:latest
+---
+# Create the cluster Service.
+# We can create a separate service or leave it just here.
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-clusterip-srv # to distinguish of the posts-srv.yaml already created
+spec:
+  selector: # tell the service what pods it is going to allow access to
+    app: posts
+  type: ClusterIP # this is the default cluster kubernetes create for us. We can write it here or not
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000 # Node Service Port
+      targetPort: 4000 # App running container
