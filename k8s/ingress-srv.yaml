@@ -4,6 +4,7 @@ metadata:
   name: ingress-srv
   annotations: # What's going to help the ingress controller understand we're feeding some routing rules
     kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true' # to allow regex on the path
 spec:
   rules: # routing rules we want to apply
       # since a cluster can have multiple apps within domains, we're configuring a posts.com one
@@ -11,13 +12,31 @@ spec:
       # this will map http://localhost:31306, so we can hit GET posts.com/posts to get the posts
       # ingress-ngnix will take the request and route to the appropiate Service (posts) and the service
       # is going to hit the right Pod
+      # ALSO we need to route all the microservices inside of our cluster
     - host: posts.com
       http:
         paths:
-          - path: /posts
+          - path: /posts/create
             backend:
               serviceName: posts-clusterip-srv # The name of the Post Service in post-depl.yaml
               servicePort: 4000 # The port of the Post Service for posts in post-depl.yaml
+          - path: /posts
+            backend:
+              serviceName: query-srv
+              servicePort: 4002
+          - path: /posts/?(.*)/comments # ?(.*) regex for any value
+            backend:
+              serviceName: comments-srv
+              servicePort: 4001
+
+          # at the end so it matches after tried the previous ones. For the React app
+          # so we you go to posts.com you see the React application
+          - path: /?(.*)
+            backend:
+              serviceName: client-srv
+              servicePort: 3000
+
+
 
 
 # If in some point this doesn't work, apply this config instead
